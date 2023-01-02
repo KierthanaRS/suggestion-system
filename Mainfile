@@ -1,0 +1,105 @@
+#This is a project that accepts details of stock had at the starting day and remaining stock at the end of the day.It shows the stock that has been sold the highest on a 
+#particular day.
+import gui
+import PySimpleGUI as sg;
+import mysql.connector as mc
+event=gui.vendingmachine()
+mydb=mc.connect(host="127.0.0.1",
+                database= "vm",
+                user="root",
+                password="root");
+def dashboard():
+            event, userInput = gui.startday()
+            if event=='Back':
+                events()
+            elif event=='Exit':
+                      event1,userInput=gui.exit()
+                      if event1=='Yes':
+                          sg.popup("Thank You")
+                      else:
+                          dashboard()
+
+            elif event=='Update':
+                    cursor5 = mydb.cursor()
+                    cursor5.execute('INSERT INTO stock (Days,productName,totalstock) VALUES(%s,%s,%s)',(userInput[0], userInput[1], userInput[2]))
+                    mydb.commit()
+                    sg.popup('Succesfully Added')
+                    events()
+def rem():
+            event, userInput1 = gui.endday()
+            if event=='Back':
+                events()
+            elif event=='Exit':
+                      event1,userInput=gui.exit()
+                      if event1=='Yes':
+                          sg.popup("Thank You")
+                      else:
+                          rem()
+
+            elif event=='Update':
+                                cursor12 = mydb.cursor()
+                                cursor1=mydb.cursor()
+                                cursor12.execute("UPDATE stock SET remainingstock=%s WHERE days=%s AND productName=%s",(userInput1[2], userInput1[0], userInput1[1]))
+                                cursor1.execute("UPDATE stock SET stockconsumed=totalstock-remainingstock")
+                                
+                                mydb.commit()
+                                sg.popup("UPDATED")
+                                events()
+    
+
+def suggestion():
+            event,userInput= gui.sgpage()
+            if event=='Back':
+                events()
+            elif event=='Exit':
+                      event1,userInput=gui.exit()
+                      if event1=='Yes':
+                          sg.popup("Thank You")
+                      else:
+                          rem()
+
+            elif event=='Show':
+                cursor4=mydb.cursor()
+                if userInput[0]=='Monday':
+                    cursor4.execute('SELECT productName FROM stock WHERE stockconsumed=(SELECT MAX(stockconsumed) FROM stock WHERE days="Monday" GROUP BY days)')
+                elif userInput[0]=='Tuesday':
+                    cursor4.execute('SELECT productName FROM stock WHERE stockconsumed=(SELECT MAX(stockconsumed) FROM stock WHERE days="Tuesday" GROUP BY days)')
+                elif userInput[0]=='Wednesday':
+                    cursor4.execute('SELECT productName FROM stock WHERE stockconsumed=(SELECT MAX(stockconsumed) FROM stock WHERE days="Wednesday" GROUP BY days)')
+                elif userInput[0]=='Thursday':
+                    cursor4.execute('SELECT productName FROM stock WHERE stockconsumed=(SELECT MAX(stockconsumed) FROM stock WHERE days="Thursday" GROUP BY days)')
+                elif userInput[0]=='Friday':
+                    cursor4.execute('SELECT productName FROM stock WHERE stockconsumed=(SELECT MAX(stockconsumed) FROM stock WHERE days="Friday" GROUP BY days)')
+                
+                record=cursor4.fetchone()
+                for i in record:
+                    x=i
+                if cursor4.rowcount !=0:
+                             layout=[[sg.T(""),sg.T("           "),sg.T("VENDORZ",font=('Helbetica',10))],
+                                      [sg.T("   "),sg.T("        "),sg.T("SUGGESTION",font=('Helbetica',10))],
+                                      [sg.T("")],
+                                      [sg.T("DAY:",font=('Helbetica',10)),sg.T(userInput[0])],
+                                      [sg.T("Product Sold The highest:",font=('Helbetica',10)),sg.T(x)],
+                                      [sg.T("")],
+                                      [sg.Button("Back")]]
+                             window = sg.Window('Suggestion', layout, grab_anywhere=False)
+                             event, values = window.read()
+                             window.close()
+                             if event=="Back":
+                                 events()
+                
+
+def events():
+            event,userInput20=gui.frspng()
+            if event=="b1":
+                    cursor=mydb.cursor()
+                    dashboard()
+
+            elif event=="b2":
+                    cursor=mydb.cursor()
+                    rem()
+            elif event=="b3":
+                    suggestion()
+
+events()
+
