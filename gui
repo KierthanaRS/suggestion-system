@@ -1,0 +1,76 @@
+import PySimpleGUI as sg
+import pandas as pd
+import mysql.connector as mc
+def vendingmachine():
+    sg.theme("Tan")
+    col1=   [[sg.Image("1.png")],
+             [sg.Button('Ok')]]
+    layout=[[sg.Column(col1)]]
+    window=sg.Window("Hello",layout).finalize()
+    event=window.read()
+    window.close()
+    return(event)
+
+def frspng():
+    sg.theme("Tan")
+    col1 = [[sg.Button(enable_events=True,image_filename="10.png",key='b1'),
+             sg.Button(enable_events=True,image_filename="3.png",key='b2'),
+             sg.Button(enable_events=True,image_filename="4.png",key='b3')]]
+    layout = [[sg.Column(col1)]]
+    window = sg.Window('Welcome',layout).finalize()
+    events,values = window.read()
+    window.close()
+    return (events ,values)
+
+def startday():
+     sg.theme("Tan")
+     col1=[[sg.Text("Day")],
+           [sg.Combo(["Monday","Tuesday","Wednesday","Thursday","Friday"], size=(20, 20), default_value='-Select-')],
+           [sg.Text("Product Name")],
+           [sg.Combo(["Juice","Biscuit","Chips","Chocolates","Healthy snacks"], size=(20, 20), default_value='-Select-')],
+           [sg.Text("Total Number of products")],
+           [sg.Input("")],
+           [sg.Button("Update"),sg.Button("Back"),sg.Button("Exit")]]
+     layout=[[sg.Column(col1)]]
+     window=sg.Window("Stock Detaills",layout).finalize()
+     event,values=window.read()
+     print(event,values[0]) 
+     window.close()
+     return(event,values)
+def endday():
+     sg.theme("Tan")
+     col1=[[sg.Text("Day")],
+           [sg.Combo(["Monday","Tuesday","Wednesday","Thursday","Friday"], size=(20, 20), default_value='-Select-')],
+           [sg.Text("Product Name")],
+           [sg.Combo(["Juice","Biscuit","Chips","Chocolates","Healthy snacks"], size=(20, 20), default_value='-Select-')],
+           [sg.Text("Total Number of products left")],
+           [sg.Input("")],
+           [sg.Button("Update"),sg.Button("Back"),sg.Button("Exit")]]
+     layout=[[sg.Column(col1)]]
+     window=sg.Window("Remaining Stock Detaills",layout).finalize()
+     event,values=window.read()
+     print(event,values[0]) 
+     window.close()
+     return(event,values)
+
+def exit():
+    sg.theme("Tan")
+    layout=[[sg.Text("Are you sure want to exit the app?")],
+            [sg.Button("Yes"),sg.Button("No")]]
+    window=sg.Window("Patients",layout).finalize()
+    event1,values1=window.read()
+    window.close()
+    return(event1,values1)
+def sgpage():
+     sg.theme("Tan")
+     col1=[[sg.Text("Day")],
+           [sg.Combo(["Monday","Tuesday","Wednesday","Thursday","Friday"], size=(20, 20), default_value='-Select-')],
+           [sg.Button("Show"),sg.Button("Back"),sg.Button("Exit")]]
+     layout=[[sg.Column(col1)]]
+     window=sg.Window("Suggestion",layout).finalize()
+     event,values2=window.read()
+     window.close()
+     return(event,values2)
+     
+    
+
